@@ -1,15 +1,19 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView } from 'react-native'
 
 export default class PreviewOrder extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {}
+	}
 
 	render() {
 		return (
-			<View>
+			<SafeAreaView>
 				<Text>
-					Item List
+					Preview Order
 				</Text>
-			</View>
+			</SafeAreaView>
 		)
 	}
 }
