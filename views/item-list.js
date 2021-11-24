@@ -9,17 +9,32 @@ export default class ItemList extends React.Component {
 		super(props)
 		this.state = {
 			listData: [],
-			selectedItems: [], // []{item, count}
+			selectedItems: [], // []{data, count}
+			loading: false,
+			endOfList: false,
 		}
 	}
 
 	componentDidMount() {
-		this.loadListData(0, 10)
+		this.loadListData(this.state.listData.length, 10)
 	}
 
 	loadListData = async (skip, count) => {
-		const data = await GetItemList(skip, count, this.props.storeData._id)
-		this.setState({ listData: data.items })
+		if (this.state.endOfList) {
+			return
+		}
+
+		this.setState({loading: true}, async () => {
+			const data = await GetItemList(skip, count, this.props.storeData._id)
+			let nextState = {
+				listData: data.items == null ? this.state.listData : this.state.listData.concat(data.items),
+				loading: false,
+			}
+			if (data.items == null || data.items.length != count) {
+				nextState["endOfList"] = true
+			}
+			this.setState(nextState)
+		})
 	}
 
 	renderListItem = ({ item: data, index, seperators }) => (
@@ -43,7 +58,7 @@ export default class ItemList extends React.Component {
 	}
 
 	renderSeperator = () => (
-		<View><Text>SEPERATOR</Text></View>
+		<View style={{paddingVertical: 8}}></View>
 	)
 
 	renderFooter = () => (
@@ -54,6 +69,13 @@ export default class ItemList extends React.Component {
 		let total = 0
 		this.state.selectedItems.forEach((el) => {total += el.count})
 		return total
+	}
+
+	checkoutOnPress = () => {
+		Actions.PreviewOrder({ 
+			orderData: this.state.selectedItems,
+			storeData: this.props.storeData,
+		})
 	}
 
 	render() {
@@ -67,14 +89,15 @@ export default class ItemList extends React.Component {
 					ItemSeparatorComponent={this.renderSeperator}
 					ListFooterComponent={this.renderFooter}
 					keyExtractor={(item, index) => item._id}
+					onEndReached={() => { this.loadListData(this.state.listData.length, 5) }}
+					onRefresh={() => { this.loadListData(this.state.listData.length, 10) }}
 				/>
 
 				<View>
-					<View style={{ position: "absolute", bottom: 0, right: 0 }}>
-						<TouchableOpacity onPress={() => { Actions.PreviewOrder({ orderData: this.state.order }) }}>
-							<Text>View Order Detail</Text>
-							<Text>Order Detail</Text>
-							<Text>{this.calcSelectedItemCount()}</Text>
+					<View style={{ position: "absolute", bottom: 0, right: 0, marginRight: 36, marginBottom: 24 }}>
+						<TouchableOpacity onPress={this.checkoutOnPress}>
+							<Text>Checkout</Text>
+							<Text>{this.calcSelectedItemCount()} Items in Cart</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

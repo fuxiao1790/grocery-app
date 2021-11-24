@@ -30,7 +30,7 @@ async function GetItemList(skip, count, storeID) {
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({ skip: skip, cound: count, "store-id": storeID })
+        body: JSON.stringify({ skip: skip, count: count, "store-id": storeID })
     }
 
     const res = await fetch(url, payload)

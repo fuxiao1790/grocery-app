@@ -31,13 +31,15 @@ export default class StoreList extends React.Component {
 	)
 
 	renderSeperator = () => (
-		<View><Text>SEPERATOR</Text></View>
+		<View style={{paddingVertical: 8}}></View>
 	)
 
 	render() {
 		return (
 			<SafeAreaView style = {{flex: 1}}>
-				<FlatList
+				<Text>Store List</Text>
+
+				<FlatList 
 					renderItem = {this.renderListItem}
 					data = {this.state.listData}
 					ItemSeparatorComponent = {this.renderSeperator}
