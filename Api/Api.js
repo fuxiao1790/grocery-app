@@ -11,11 +11,15 @@ async function GetStoreList(skip, count) {
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({ Skip: skip, Count: count })
+        body: JSON.stringify({ skip: skip, count: count })
     }
 
     const res = await fetch(url, payload)
     const json = await res.json()
+
+    if (__DEV__) {
+        console.log(json)
+    }
 
     return json
 }
@@ -26,11 +30,15 @@ async function GetItemList(skip, count, storeID) {
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({ Skip: skip, Count: count, StoreID: storeID })
+        body: JSON.stringify({ skip: skip, cound: count, "store-id": storeID })
     }
 
     const res = await fetch(url, payload)
     const json = await res.json()
+
+    if (__DEV__) {
+        console.log(json)
+    }
 
     return json
 }
@@ -41,11 +49,15 @@ async function GetOrderList(skip, count) {
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({ Skip: skip, Count: count })
+        body: JSON.stringify({ skip: skip, count: count })
     }
 
     const res = await fetch(url, payload)
     const json = await res.json()
+
+    if (__DEV__) {
+        console.log(json)
+    }
 
     return json
 }

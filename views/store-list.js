@@ -18,14 +18,14 @@ export default class StoreList extends React.Component {
 
 	loadListData = async (skip, count) => {
 		const data = await GetStoreList(skip, count)
-		this.setState({listData: data.Stores})
+		this.setState({listData: data.stores})
 	}
 
-	renderListItem = ({item: listItem, index, seperators}) => (
-		<TouchableOpacity onPress={() => {Actions.ItemList({storeData: listItem})}}>
+	renderListItem = ({item: data, index, seperators}) => (
+		<TouchableOpacity onPress={() => {Actions.ItemList({storeData: data})}}>
 			<View>
-				<Text>Location: {listItem.location}</Text>
-				<Text>Name: {listItem.name}</Text>
+				<Text>Location: {data.location}</Text>
+				<Text>Name: {data.name}</Text>
 			</View>
 		</TouchableOpacity>
 	)

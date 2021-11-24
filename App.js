@@ -13,7 +13,7 @@ export default class App extends React.Component {
           <Scene key="StoreList" component={StoreList} hideNavBar/>
           <Scene key="ItemList" component={ItemList} hideNavBar/>
           <Scene key="OrderList" component={OrderList} hideNavBar/>
-          <Scene key="PreviewOder" component={PreviewOrder} hideNavBar/>
+          <Scene key="PreviewOrder" component={PreviewOrder} hideNavBar/>
         </Stack>
       </Router>
     )
