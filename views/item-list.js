@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
 import { GetItemList } from '../Api/Api'
+import Header from '../components/header'
 
 export default class ItemList extends React.Component {
 	constructor(props) {
@@ -27,8 +28,12 @@ export default class ItemList extends React.Component {
 			const data = await GetItemList(skip, count, this.props.storeData._id)
 
 			let nextState = {
-				listData: data.items == null ? this.state.listData : this.state.listData.concat(data.items.map((val) => ({ data: val, count: 0 }))),
 				loading: false,
+				listData: this.state.listData
+			}
+
+			if (data.items != null) {
+				nextState["listData"] = this.state.listData.concat(data.items.map((val) => ({ data: val, count: 0 })))
 			}
 
 			if (data.items == null || data.items.length != count) {
@@ -46,9 +51,15 @@ export default class ItemList extends React.Component {
 				itemPrice={arg.item.data.price}
 				itemCount={arg.item.count}
 				removeItemOnPress={() => this.listItemRemoveOnPress(arg.item)}
+				removeAllItemOnPress={() => this.listItemRemoveAllOnPress(arg.item)}
 				onPress={() => { this.listItemOnPress(arg.item) }}
 			/>
 		)
+	}
+
+	listItemRemoveAllOnPress = (item) => {
+		item.count = 0
+		this.setState(this.state)
 	}
 
 	listItemRemoveOnPress = (item) => {
@@ -85,9 +96,10 @@ export default class ItemList extends React.Component {
 	}
 
 	render() {
+		let selectedItemCount = this.calcSelectedItemCount()
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<Text>Store Name: {this.props.storeData.name}</Text>
+				<Header title={"Item List"} backOnPress={Actions.pop}/>
 
 				<FlatList
 					renderItem={this.renderListItem}
@@ -99,14 +111,18 @@ export default class ItemList extends React.Component {
 					onRefresh={() => { this.loadListData(this.state.listData.length, 10) }}
 				/>
 
-				<View>
-					<View style={{ position: "absolute", bottom: 0, right: 0, marginRight: 36, marginBottom: 24 }}>
-						<TouchableOpacity onPress={this.previewOnPress}>
-							<Text>View Detail</Text>
-							<Text>{this.calcSelectedItemCount()} Items in Cart</Text>
-						</TouchableOpacity>
+				{selectedItemCount > 0 ?
+					<View>
+						<View style={{ position: "absolute", bottom: 0, right: 0, marginRight: 36, marginBottom: 24 }}>
+							<TouchableOpacity onPress={this.previewOnPress}>
+								<Text>View Detail</Text>
+								<Text>{selectedItemCount} Items in Cart</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
-				</View>
+					: 
+					null
+				}
 			</SafeAreaView>
 		)
 	}
@@ -126,6 +142,13 @@ class ListItem extends React.Component {
 								<Text>Remove From Cart</Text>
 							</TouchableOpacity>
 						</>
+						:
+						null
+					}
+					{this.props.itemCount > 1 ?
+						<TouchableOpacity onPress={this.props.removeAllItemOnPress}>
+							<Text>Remove All From Cart</Text>
+						</TouchableOpacity>
 						:
 						null
 					}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, SafeAreaView } from 'react-native'
+import Header from '../components/header'
 
 export default class OrderList extends React.Component {
 	constructor(props) {
@@ -12,8 +13,9 @@ export default class OrderList extends React.Component {
 	render() {
 		return (
 			<SafeAreaView>
+				<Header title={"Order List"} backOnPress={Actions.pop}/>
 				<Text>
-					Item List
+					Order List
 				</Text>
 			</SafeAreaView>
 		)

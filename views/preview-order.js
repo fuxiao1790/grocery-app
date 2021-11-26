@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, SafeAreaView } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
+import Header from '../components/header'
 
 export default class PreviewOrder extends React.Component {
 	constructor(props) {
@@ -37,7 +38,7 @@ export default class PreviewOrder extends React.Component {
 	render() {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<Text>Order Preview</Text>
+				<Header title={"Preview Order"} backOnPress={Actions.pop}/>
 				<FlatList
 					renderItem={this.renderListItem}
 					data={this.state.listData}
