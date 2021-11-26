@@ -3,6 +3,8 @@ import ItemList from './views/item-list'
 import OrderList from './views/order-list'
 import PreviewOrder from './views/preview-order'
 import StoreList from './views/store-list'
+import Checkout from "./views/checkout"
+
 import { Scene, Router, Stack } from 'react-native-router-flux';
 
 export default class App extends React.Component {
@@ -14,6 +16,7 @@ export default class App extends React.Component {
           <Scene key="ItemList" component={ItemList} hideNavBar/>
           <Scene key="OrderList" component={OrderList} hideNavBar/>
           <Scene key="PreviewOrder" component={PreviewOrder} hideNavBar/>
+          <Scene key="Checkout" component={Checkout} hideNavBar/>
         </Stack>
       </Router>
     )
