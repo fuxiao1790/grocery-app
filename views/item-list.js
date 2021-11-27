@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
-import { GetItemList } from '../Api/Api'
+import { GetItemList } from '../api/api'
 import { Styles } from '../common/styles'
 import BottomHoverButton from '../components/bottom-hover-button'
 import Header from '../components/header'
@@ -145,7 +145,7 @@ class ListItem extends React.Component {
 	render() {
 		return (
 			<TouchableOpacity onPress={this.props.onPress}>
-				<View style={Styles.listItemContainer}>
+				<View style={this.props.itemCount > 0 ? Styles.listItemContainerHL : Styles.listItemContainer}>
 					<View style={{flexDirection: "row", justifyContent: "space-between"}}>
 						<View>
 							<Text>Name: {this.props.itemName}</Text>

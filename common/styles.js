@@ -8,6 +8,12 @@ const Styles = StyleSheet.create({
         paddingHorizontal: 16
     },
 
+    listItemContainerHL: {
+        backgroundColor: Colors.COLOR_PALLET_4,
+        paddingVertical: 12,
+        paddingHorizontal: 16
+    },
+
     list: {
         backgroundColor: Colors.COLOR_PALLET_3
     }

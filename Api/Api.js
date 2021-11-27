@@ -5,6 +5,8 @@ const STORE_LIST_ROUTE = "/store/list"
 const ITEM_LIST_ROUTE = "/item/list"
 const ORDER_LIST_ROUTE = "/order/list"
 const SUBMIT_ORDER_ROUTE = "/order/submit"
+const LOGIN_ROUTE = "/user/login"
+const REGISTER_ROUTE = 'user/register'
 
 async function GetStoreList(skip, count) {
     const url = BASE_URL + STORE_LIST_ROUTE
@@ -15,14 +17,7 @@ async function GetStoreList(skip, count) {
         body: JSON.stringify({ skip: skip, count: count })
     }
 
-    const res = await fetch(url, payload)
-    const json = await res.json()
-
-    if (__DEV__) {
-        console.log(json)
-    }
-
-    return json
+    return await helper(url, payload)
 }
 
 async function GetItemList(skip, count, storeID) {
@@ -34,14 +29,7 @@ async function GetItemList(skip, count, storeID) {
         body: JSON.stringify({ skip: skip, count: count, "store-id": storeID })
     }
 
-    const res = await fetch(url, payload)
-    const json = await res.json()
-
-    if (__DEV__) {
-        console.log(json)
-    }
-
-    return json
+    return await helper(url, payload)
 }
 
 async function GetOrderList(skip, count) {
@@ -53,33 +41,60 @@ async function GetOrderList(skip, count) {
         body: JSON.stringify({ skip: skip, count: count })
     }
 
-    const res = await fetch(url, payload)
-    const json = await res.json()
-
-    if (__DEV__) {
-        console.log(json)
-    }
-
-    return json
+    return await helper(url, payload)
 }
 
-async function SubmitOrder(orderData) {
-    const url = BASE_URL + SUBMIT_ORDER_ROUTE
-
+async function UserRegister(username, password) {
+    const url = BASE_URL + REGISTER_ROUTE
+    
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({"username": username, "password": password})
     }
 
-    const res = await fecth(url, payload)
-    const json = await res.json()
+    return await helper(url, payload)
+}
 
-    if (__DEV__) {
-        console.log(json)
+async function UserLogin(username, password) {
+    const url = BASE_URL + LOGIN_ROUTE
+    
+    const payload = {
+        method: "POST",
+        headers: HEADERS,
+        body: JSON.stringify({"username": username, "password": password})
     }
 
-    return json
+    return await helper(url, payload)
+}
+
+async function SubmitOrder(userID, orderData) {
+    const url = BASE_URL + SUBMIT_ORDER_ROUTE
+    
+    const payload = {
+        method: "POST",
+        headers: HEADERS,
+        body: JSON.stringify({userid: userID, orderData: orderData})
+    }
+
+    return await helper(url, payload)
+}
+
+async function helper(url, payload) {
+    try {
+        const res = await fetch(url, payload)
+        const json = await res.json()
+
+        if (__DEV__) {
+            console.log(json)
+        }
+    
+        return json
+    } catch(err) {
+        console.log("error calling " + url + " | " + err)
+    }
+
+    return null
 }
 
 export {
@@ -87,4 +102,6 @@ export {
     GetItemList,
     GetOrderList,
     SubmitOrder,
+    UserLogin,
+    UserRegister,
 }
