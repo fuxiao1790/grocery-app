@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Text, SafeAreaView } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { View, Text, FlatList } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
 import { GetStoreList } from '../Api/Api'
+import { Styles } from '../common/styles'
 import Header from '../components/header'
+import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
 
 export default class StoreList extends React.Component {
 	constructor(props) {
@@ -24,7 +26,7 @@ export default class StoreList extends React.Component {
 
 	renderListItem = ({item: data, index, seperators}) => (
 		<TouchableOpacity onPress={() => {Actions.ItemList({storeData: data})}}>
-			<View>
+			<View style={Styles.listItemContainer}>
 				<Text>Location: {data.location}</Text>
 				<Text>Name: {data.name}</Text>
 			</View>
@@ -37,16 +39,18 @@ export default class StoreList extends React.Component {
 
 	render() {
 		return (
-			<SafeAreaView style = {{flex: 1}}>
+			<View style = {{flex: 1}}>
 				<Header title={"Store List"} backOnPress={Actions.pop}/>
 
-				<FlatList 
+				<FlatList
+					style={Styles.list}
 					renderItem = {this.renderListItem}
 					data = {this.state.listData}
-					ItemSeparatorComponent = {this.renderSeperator}
+					ItemSeparatorComponent = {RenderSeperator}
+					ListFooterComponent = {RenderListFooter}
 					keyExtractor = {(item, index) => item._id}
 				/>
-			</SafeAreaView>
+			</View>
 		)
 	}
 }

@@ -1,8 +1,11 @@
 import React from 'react'
-import { View, Text, SafeAreaView } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { View, Text, FlatList } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
+import { Styles } from '../common/styles'
+import BottomHoverButton from '../components/bottom-hover-button'
 import Header from '../components/header'
+import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
 
 export default class PreviewOrder extends React.Component {
 	constructor(props) {
@@ -13,10 +16,11 @@ export default class PreviewOrder extends React.Component {
 	}
 
 	renderListItem = ({ item: item, index, seperators }) => (
-		<View>
+		<View style={Styles.listItemContainer}>
 			<Text>Name: {item.data.name}</Text>
-			<Text>Price: {item.data.price}</Text>
-			<Text>Count: {item.count}</Text>
+			<Text>Price Per Unit: {item.data.price}</Text>
+			<Text>Unit: {item.count}</Text>
+			<Text>Price: {item.data.price * item.count}</Text>
 		</View>
 	)
 
@@ -35,26 +39,34 @@ export default class PreviewOrder extends React.Component {
 		})
 	}
 
+	calcSubTotal = () => {
+		let total = 0
+		this.props.orderData.forEach((el) => {
+			total += el.data.price * el.count
+		})
+		return total
+	}
+
 	render() {
 		return (
-			<SafeAreaView style={{ flex: 1 }}>
-				<Header title={"Preview Order"} backOnPress={Actions.pop}/>
+			<View style={{ flex: 1 }}>
+				<Header title={"Preview Order"} backOnPress={Actions.pop} />
 				<FlatList
+					style={Styles.list}
 					renderItem={this.renderListItem}
 					data={this.state.listData}
-					ItemSeparatorComponent={this.renderSeperator}
-					ListFooterComponent={this.renderFooter}
+					ItemSeparatorComponent={RenderSeperator}
+					ListFooterComponent={RenderListFooter}
 					keyExtractor={(item, index) => item.data._id}
 				/>
 
-				<View>
-					<View style={{ position: "absolute", bottom: 0, right: 0, marginRight: 36, marginBottom: 24 }}>
-						<TouchableOpacity onPress={this.checkoutOnPress}>
-							<Text>Checkout</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</SafeAreaView>
+				<BottomHoverButton>
+					<TouchableOpacity onPress={this.checkoutOnPress}>
+						<Text style={{textAlign: "center"}}>Subtotal: {this.calcSubTotal()}</Text>
+						<Text style={{textAlign: "center"}}>Checkout</Text>
+					</TouchableOpacity>
+				</BottomHoverButton>
+			</View>
 		)
 	}
 }

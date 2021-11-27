@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { Colors } from '../common/colors'
 
 export default class Header extends React.Component {
     render() {
         return (
-            <View style={styles.mainContainer}>
+            <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.backButtonContainer}>
                     {!this.props.root ?
                         <TouchableOpacity onPress={this.props.backOnPress}>
@@ -26,7 +26,7 @@ export default class Header extends React.Component {
                 </View>
 
                 <View style={styles.dummyItemContainer} />
-            </View>
+            </SafeAreaView>
         )
     }
 }
@@ -35,31 +35,37 @@ const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: Colors.COLOR_PALLET_1
     },
 
     backButtonContainer: {
         flex: 1,
+        backgroundColor: Colors.COLOR_PALLET_1
     },
 
     titleContainer: {
         flex: 3,
+        backgroundColor: Colors.COLOR_PALLET_1
     },
 
     dummyItemContainer: {
         flex: 1,
+        backgroundColor: Colors.COLOR_PALLET_1
     },
 
     titleText: {
         textAlign: "center",
         paddingVertical: 12,
         paddingHorizontal: 16,
-        fontSize: 24
+        fontSize: 24,
+        backgroundColor: Colors.COLOR_PALLET_1
     },
 
     backButtonText: {
         textAlign: "center",
         paddingVertical: 12,
-        paddingHorizontal: 16
+        paddingHorizontal: 16,
+        backgroundColor: Colors.COLOR_PALLET_1
     }
 })
