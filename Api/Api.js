@@ -4,7 +4,7 @@ const HEADERS = { "Content-Type": "application/json" }
 const STORE_LIST_ROUTE = "/store/list"
 const ITEM_LIST_ROUTE = "/item/list"
 const ORDER_LIST_ROUTE = "/order/list"
-const SUBMIT_ORDER_ROUTE = "/order/submit"
+const CREATE_ORDER_ROUTE = "/order/create"
 const LOGIN_ROUTE = "/user/login"
 const REGISTER_ROUTE = '/user/register'
 
@@ -68,13 +68,21 @@ async function UserLogin(username, password) {
     return await helper(url, payload)
 }
 
-async function SubmitOrder(userID, orderData) {
-    const url = BASE_URL + SUBMIT_ORDER_ROUTE
+async function SubmitOrder(userData, orderData, storeData, address) {
+    const url = BASE_URL + CREATE_ORDER_ROUTE
     
+    let items = {}
+    orderData.forEach(item => items[item.data._id] = item.count)
+
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({userid: userID, orderData: orderData})
+        body: JSON.stringify({
+            "items": items,
+            "location": address,
+            "user-id": userData.userID,
+            "store-id": storeData._id,
+        })
     }
 
     return await helper(url, payload)

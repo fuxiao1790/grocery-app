@@ -5,6 +5,7 @@ import { Colors } from '../common/colors'
 import Header from '../components/header'
 import CustomTextInput from '../components/custom-text-input'
 import CustomButton from '../components/custom-button'
+import { SubmitOrder } from '../api/api'
 
 export default class Checkout extends React.Component {
     constructor(props) {
@@ -14,8 +15,22 @@ export default class Checkout extends React.Component {
         }
     }
 
-    checkoutOnPress = () => {
+    checkoutOnPress = async () => {
         if (this.state.address.length === 0) {
+            return
+        }
+
+        const res = await SubmitOrder(
+            this.props.userData, 
+            this.props.orderData, 
+            this.props.storeData,
+            this.state.address,
+        )
+        if (res == null) {
+            return
+        }
+
+        if (res.error != null) {
             return
         }
 
@@ -31,6 +46,7 @@ export default class Checkout extends React.Component {
                 <CustomTextInput
                     onChangeText={this.onChangeText}
                     title={"Delivery Address"}
+                    placeholder={"Enter Address"}
                 />
 
                 <CustomButton

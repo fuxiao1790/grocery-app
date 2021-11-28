@@ -1,12 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Colors } from "../common/colors";
 
 export default class CustomTextInput extends React.Component {
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.titleText}>{this.props.title}</Text>
-                <TextInput 
+                <TextInput
                     style={styles.textInput} 
                     {...this.props}
                 />
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     textInput: {
         paddingVertical: 12,
         paddingHorizontal: 16,
-        backgroundColor: "white",
+        backgroundColor: Colors.COLOR_PALLET_4,
         borderRadius: 24,
         fontSize: 20,
         shadowColor: "#000",

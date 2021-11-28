@@ -12,17 +12,44 @@ export default class StoreList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			listData: []
+			listData: [],
+			loading: false,
+			endOfList: false,
 		}
 	}
 
 	componentDidMount() {
-		this.loadListData(0, 10)
+		this.loadListData(0, 3)
 	}
 
 	loadListData = async (skip, count) => {
-		const data = await GetStoreList(skip, count)
-		this.setState({ listData: data.stores })
+		if (this.state.endOfList || this.state.loading) {
+			return
+		}
+
+		this.setState({ loading: true }, async () => {
+
+			const data = await GetStoreList(skip, count)
+
+			if (data === null) {
+				return
+			}
+
+			let nextState = {
+				loading: false,
+				listData: this.state.listData,
+			}
+
+			if (data.stores != null) {
+				nextState["listData"] = this.state.listData.concat(data.stores)
+			}
+
+			if (data.stores == null || data.stores.length != count) {
+				nextState["endOfList"] = true
+			}
+
+			this.setState(nextState)
+		})
 	}
 
 	listItemOnPress = (data) => {
@@ -55,7 +82,10 @@ export default class StoreList extends React.Component {
 					data={this.state.listData}
 					ItemSeparatorComponent={RenderSeperator}
 					ListFooterComponent={RenderListFooter}
+					ListHeaderComponent={RenderSeperator}
 					keyExtractor={(item, index) => item._id}
+					onEndReached={() => { this.loadListData(this.state.listData.length, 3) }}
+					onEndReachedThreshold={0.5}
 				/>
 			</View>
 		)

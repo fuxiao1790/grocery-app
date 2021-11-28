@@ -18,7 +18,6 @@ export default class ItemList extends React.Component {
 			listData: [], // {data: itemData{}, count: int}
 			loading: false,
 			endOfList: false,
-			refreshing: false,
 		}
 	}
 
@@ -35,10 +34,13 @@ export default class ItemList extends React.Component {
 
 			const data = await GetItemList(skip, count, this.props.storeData._id)
 
+			if (data === null) {
+				return
+			}
+
 			let nextState = {
 				loading: false,
 				listData: this.state.listData,
-				refreshing: false,
 			}
 
 			if (data.items != null) {
@@ -87,13 +89,6 @@ export default class ItemList extends React.Component {
 		this.setState(this.state)
 	}
 
-	listOnRefresh = () => {
-		this.setState(
-			{ listData: [], refreshing: true, endOfList: false },
-			() => { this.loadListData(this.state.listData.length, 10) }
-		)
-	}
-
 	calcSelectedItemCount = () => {
 		let total = 0
 		this.state.listData.forEach((el) => total += el.count)
@@ -125,18 +120,17 @@ export default class ItemList extends React.Component {
 					data={this.state.listData}
 					ItemSeparatorComponent={RenderSeperator}
 					ListFooterComponent={RenderListFooter}
+					ListHeaderComponent={RenderSeperator}
 					keyExtractor={(item, index) => item.data._id}
 					onEndReached={() => { this.loadListData(this.state.listData.length, 5) }}
 					onEndReachedThreshold={0.5}
-				// onRefresh={this.listOnRefresh}
-				// refreshing={this.state.refreshing}
 				/>
 
 				{selectedItemCount > 0 ?
 					<BottomHoverButton>
 						<TouchableOpacity onPress={this.previewOnPress}>
-							<Text>{selectedItemCount} Items in Cart</Text>
-							<Text>View Order Detail</Text>
+							<Text style={{textAlign: "center"}}>{selectedItemCount} Items in Cart</Text>
+							<Text style={{textAlign: "center"}}>View Order Detail</Text>
 						</TouchableOpacity>
 					</BottomHoverButton>
 					:
@@ -190,7 +184,8 @@ const listItemStyles = StyleSheet.create({
 
 	addRemoveContainer: {
 		height: 36,
-		justifyContent: "flex-start",
+		width: 120,
+		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "row",
 		marginTop: 12

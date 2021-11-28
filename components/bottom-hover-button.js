@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Colors.COLOR_PALLET_1,
+        backgroundColor: Colors.COLOR_PALLET_2,
         borderRadius: 45,
 
         shadowColor: "#000",
