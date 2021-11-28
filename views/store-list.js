@@ -40,10 +40,6 @@ export default class StoreList extends React.Component {
 		</TouchableOpacity>
 	)
 
-	renderSeperator = () => (
-		<View style={{paddingVertical: 8}}></View>
-	)
-
 	render() {
 		return (
 			<View style = {{flex: 1}}>

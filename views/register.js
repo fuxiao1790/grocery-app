@@ -21,21 +21,15 @@ export default class register extends React.Component {
 
     registerOnPress = async () => {
         const registerRes = await UserRegister(this.state.username, this.state.password)
-        if (registerRes.error != null) {
-            console.log("test")
+        if (registerRes != null && registerRes.error != null) {
             return
         }
 
-        console.log("test")
-
         const loginRes = await UserLogin(this.state.username, this.state.password)
-        if (loginRes.userid != null && loginRes.userid.length > 0) {
-            console.log("test")
+        if (loginRes != null && loginRes.userid != null && loginRes.userid.length > 0) {
             if (this.props.onRegister instanceof Function) {
-                console.log("test")
                 this.props.onRegister(loginRes.userid)
             }
-            console.log("test")
             Actions.pop()
         }
     }

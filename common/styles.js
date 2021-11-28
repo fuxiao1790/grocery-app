@@ -15,7 +15,8 @@ const Styles = StyleSheet.create({
     },
 
     list: {
-        backgroundColor: Colors.COLOR_PALLET_3
+        backgroundColor: Colors.COLOR_PALLET_3,
+        flex: 1
     },
 
     backgroundColor: {

@@ -11,25 +11,70 @@ export default class PreviewOrder extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			listData: this.props.orderData,
+			listData: JSON.parse(JSON.stringify(this.props.orderData))
 		}
+	}
+
+	listItemRemoveAllOnPress = (item) => {
+		let newListData = this.state.listData.filter(i => i.data._id !== item.data._id)
+		this.setState({listData: newListData})
+
+		this.props.listItemRemoveAllOnPress(item)
+	}
+
+	listItemRemoveOnPress = (item) => {
+		if (item.count == 1) {
+			let newListData = this.state.listData.filter(i => i.data._id !== item.data._id)
+			this.setState({listData: newListData})
+			
+		} else {
+			let res = this.state.listData.find(i => i.data._id === item.data._id)
+			res.count --
+			this.setState(this.state)
+		}
+
+		this.props.listItemRemoveOnPress(item)
+	}
+
+	listItemAddOneOnPress = (item) => {
+		let res = this.state.listData.find(i => i.data._id === item.data._id)
+		res.count ++
+		this.setState(this.state)
+
+		this.props.listItemAddOneOnPress(item)
 	}
 
 	renderListItem = ({ item: item, index, seperators }) => (
 		<View style={Styles.listItemContainer}>
-			<Text>Name: {item.data.name}</Text>
-			<Text>Price Per Unit: {item.data.price}</Text>
-			<Text>Unit: {item.count}</Text>
-			<Text>Price: {item.data.price * item.count}</Text>
+			<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+				<View>
+					<Text>Name: {item.data.name}</Text>
+					<Text>Price Per Unit: {item.data.price}</Text>
+					<Text>Price: {item.data.price * item.count}</Text>
+				</View>
+				<View>
+					<View>
+						{item.count > 0 ?
+							<>
+								<TouchableOpacity onPress={() => this.listItemRemoveOnPress(item)}>
+									<Text style={{ textAlign: "right" }}>Remove One From Cart</Text>
+								</TouchableOpacity>
+							</>
+							:
+							null
+						}
+						{item.count > 1 ?
+							<TouchableOpacity onPress={() => { this.listItemRemoveAllOnPress(item) }}>
+								<Text style={{ textAlign: "right" }}>Remove All From Cart</Text>
+							</TouchableOpacity>
+							:
+							null
+						}
+						<Text style={{ textAlign: "right" }}>Count: {item.count}</Text>
+					</View>
+				</View>
+			</View>
 		</View>
-	)
-
-	renderSeperator = () => (
-		<View style={{ paddingVertical: 8 }}></View>
-	)
-
-	renderFooter = () => (
-		<View style={{ paddingBottom: 100 }}></View>
 	)
 
 	checkoutOnPress = () => {
@@ -63,8 +108,8 @@ export default class PreviewOrder extends React.Component {
 
 				<BottomHoverButton>
 					<TouchableOpacity onPress={this.checkoutOnPress}>
-						<Text style={{textAlign: "center"}}>Subtotal: {this.calcSubTotal()}</Text>
-						<Text style={{textAlign: "center"}}>Checkout</Text>
+						<Text style={{ textAlign: "center" }}>Subtotal: {this.calcSubTotal()}</Text>
+						<Text style={{ textAlign: "center" }}>Checkout</Text>
 					</TouchableOpacity>
 				</BottomHoverButton>
 			</View>

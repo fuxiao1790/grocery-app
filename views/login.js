@@ -18,12 +18,13 @@ export default class Login extends React.Component {
     }
 
     usernameOnChange = (str) => this.setState({username: str})
+    
     passwordOnChange = (str) => this.setState({password: str})
 
     loginOnPress = async () => {
         const res = await UserLogin(this.state.username, this.state.password)
 
-        if (res.userid != null && res.userid.length > 0) {
+        if (res != null && res.userid != null && res.userid.length > 0) {
             if (this.props.onLogin instanceof Function) {
                 this.props.onLogin(res.userid)
             }
