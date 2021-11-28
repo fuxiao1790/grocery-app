@@ -1,12 +1,15 @@
 import React from 'react'
-import { View, Text, FlatList } from 'react-native'
+import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
 import { GetItemList } from '../api/api'
+import { Colors } from '../common/colors'
 import { Styles } from '../common/styles'
+import AddItemButton from '../components/add-item-button'
 import BottomHoverButton from '../components/bottom-hover-button'
 import Header from '../components/header'
 import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
+import RemoveItemButon from '../components/remove-item-button'
 
 export default class ItemList extends React.Component {
 	constructor(props) {
@@ -74,13 +77,13 @@ export default class ItemList extends React.Component {
 		if (res.count <= 0) {
 			return
 		}
-		res.count --
+		res.count--
 		this.setState(this.state)
 	}
 
 	listItemAddOneOnPress = (item) => {
 		let res = this.state.listData.find(i => i.data._id === item.data._id)
-		res.count ++
+		res.count++
 		this.setState(this.state)
 	}
 
@@ -149,34 +152,24 @@ class ListItem extends React.Component {
 		return (
 			<TouchableOpacity onPress={this.props.addItemOnPress}>
 				<View style={this.props.itemCount > 0 ? Styles.listItemContainerHL : Styles.listItemContainer}>
-					<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-						<View>
-							<Text>Name: {this.props.itemName}</Text>
-							<Text>Price: {this.props.itemPrice}</Text>
-						</View>
-						<View>
-							<TouchableOpacity onPress={this.props.addItemOnPress}>
-								<Text style={{ textAlign: "right" }}>Add To Cart</Text>
-							</TouchableOpacity>
-							{this.props.itemCount > 0 ?
-								<TouchableOpacity onPress={this.props.removeItemOnPress}>
-									<Text style={{ textAlign: "right" }}>Remove From Cart</Text>
-								</TouchableOpacity>
-								:
-								null
-							}
-							{this.props.itemCount > 1 ?
-								<TouchableOpacity onPress={this.props.removeAllItemOnPress}>
-									<Text style={{ textAlign: "right" }}>Remove All From Cart</Text>
-								</TouchableOpacity>
-								:
-								null
-							}
-							{this.props.itemCount > 0 ?
-								<Text style={{ textAlign: "right" }}>Count: {this.props.itemCount}</Text>
-								:
-								null
-							}
+					<View style={listItemStyles.mainContainer}>
+						<View style={listItemStyles.placeHolderImage}><Text style={{ textAlign: "center", padding: 12 }}>Placeholder Image</Text></View>
+						<View style={listItemStyles.subContainer}>
+							<Text>{this.props.itemName}</Text>
+							<Text>${this.props.itemPrice}</Text>
+							<View style={listItemStyles.addRemoveContainer}>
+								<View style={{ flexDirection: "row", marginRight: 6 }}>
+									<RemoveItemButon onPress={this.props.removeItemOnPress} />
+								</View>
+
+								<View style={{ flexDirection: "row", justifyContent: "center", marginHorizontal: 12 }}>
+									<Text style={{ textAlign: "center", fontSize: 18 }}>{this.props.itemCount}</Text>
+								</View>
+
+								<View style={{ flexDirection: "row", marginLeft: 6 }}>
+									<AddItemButton onPress={this.props.addItemOnPress} />
+								</View>
+							</View>
 						</View>
 					</View>
 				</View>
@@ -184,3 +177,34 @@ class ListItem extends React.Component {
 		)
 	}
 }
+
+const listItemStyles = StyleSheet.create({
+	placeHolderImage: {
+		width: 124,
+		height: 124,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: Colors.COLOR_PALLET_3,
+		borderRadius: 12,
+	},
+
+	addRemoveContainer: {
+		height: 36,
+		justifyContent: "flex-start",
+		alignItems: "center",
+		flexDirection: "row",
+		marginTop: 12
+	},
+
+	mainContainer: {
+		flexDirection: "row",
+	},
+
+	subContainer: {
+		justifyContent: "space-between",
+		alignItems: "center",
+		flex: 1,
+		marginLeft: 12,
+		paddingVertical: 12
+	}
+})
