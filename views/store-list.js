@@ -24,8 +24,15 @@ export default class StoreList extends React.Component {
 		this.setState({listData: data.stores})
 	}
 
+	listItemOnPress = (data) => {
+		Actions.ItemList({
+			storeData: data, 
+			userData: this.props.userData,
+		})
+	}
+
 	renderListItem = ({item: data, index, seperators}) => (
-		<TouchableOpacity onPress={() => {Actions.ItemList({storeData: data})}}>
+		<TouchableOpacity onPress={() => { this.listItemOnPress(data) }}>
 			<View style={Styles.listItemContainer}>
 				<Text>Location: {data.location}</Text>
 				<Text>Name: {data.name}</Text>

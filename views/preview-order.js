@@ -36,6 +36,7 @@ export default class PreviewOrder extends React.Component {
 		Actions.Checkout({
 			storeData: this.props.storeData,
 			orderData: this.props.orderData,
+			userData: this.props.userData,
 		})
 	}
 

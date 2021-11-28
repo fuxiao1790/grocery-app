@@ -6,7 +6,7 @@ const ITEM_LIST_ROUTE = "/item/list"
 const ORDER_LIST_ROUTE = "/order/list"
 const SUBMIT_ORDER_ROUTE = "/order/submit"
 const LOGIN_ROUTE = "/user/login"
-const REGISTER_ROUTE = 'user/register'
+const REGISTER_ROUTE = '/user/register'
 
 async function GetStoreList(skip, count) {
     const url = BASE_URL + STORE_LIST_ROUTE

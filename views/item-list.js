@@ -104,6 +104,7 @@ export default class ItemList extends React.Component {
 		Actions.PreviewOrder({
 			orderData: orderData,
 			storeData: this.props.storeData,
+			userData: this.props.userData,
 		})
 	}
 
