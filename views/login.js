@@ -1,11 +1,10 @@
 import React from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Header from "../components/header";
 import CustomTextInput from "../components/custom-text-input";
 import CustomButton from "../components/custom-button";
 import { UserLogin } from "../api/api"
-import { Colors } from "../common/colors";
 import { Styles } from "../common/styles";
 
 export default class Login extends React.Component {
@@ -24,12 +23,23 @@ export default class Login extends React.Component {
     loginOnPress = async () => {
         const res = await UserLogin(this.state.username, this.state.password)
 
-        if (res != null && res.userid != null && res.userid.length > 0) {
-            if (this.props.onLogin instanceof Function) {
-                this.props.onLogin(res.userid)
-            }
-            Actions.pop()
+        if (res === null) {
+            // network error nothing was returned from server
+            Alert.alert("Network Error", "Is the server running?")
+            return
         }
+
+        if (res.error !== null && (res.userid === null || res.userid.length === 0)) {
+            // username password mimatch
+            Alert.alert("Input Error", "Username Password Mismatch")
+            return
+        }
+
+
+        if (this.props.onLogin instanceof Function) {
+            this.props.onLogin(res.userid)
+        }
+        Actions.pop()
     }
 
     render() {

@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Header from "../components/header";
 import CustomTextInput from "../components/custom-text-input";
@@ -21,7 +21,14 @@ export default class register extends React.Component {
 
     registerOnPress = async () => {
         const registerRes = await UserRegister(this.state.username, this.state.password)
-        if (registerRes != null && registerRes.error != null) {
+        
+        if (registerRes === null) {
+            Alert.alert("Network Error", "Is the server running?")
+            return
+        }
+
+        if (registerRes.error != null) {
+            Alert.alert("Register Error", "Username Already In Use")
             return
         }
 
