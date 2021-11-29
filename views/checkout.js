@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { Colors } from '../common/colors'
 import Header from '../components/header'
@@ -17,6 +17,7 @@ export default class Checkout extends React.Component {
 
     checkoutOnPress = async () => {
         if (this.state.address.length === 0) {
+            Alert.alert("Input Error", "Address cannot be empty")
             return
         }
 
@@ -26,11 +27,15 @@ export default class Checkout extends React.Component {
             this.props.storeData,
             this.state.address,
         )
-        if (res == null) {
+        if (res === null) {
+            // network error nothing was returned from server
+            Alert.alert("Network Error", "Is the server running?")
             return
         }
 
-        if (res.error != null) {
+        if (res.error !== null) {
+            // internal server errors, eg db failing.
+            Alert.alert("Server Error", "Server Could not handle the request at the momemnt?")
             return
         }
 

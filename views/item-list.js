@@ -56,18 +56,16 @@ export default class ItemList extends React.Component {
 		})
 	}
 
-	renderListItem = (arg) => {
-		return (
-			<ListItem
-				itemName={arg.item.name}
-				itemPrice={arg.item.price}
-				itemCount={this.state.itemsInCart.has(arg.item._id) ? this.state.itemsInCart.get(arg.item._id) : 0}
-				addItemOnPress={() => { this.listItemAddOneOnPress(arg.item) }}
-				removeItemOnPress={() => this.listItemRemoveOnPress(arg.item)}
-				removeAllItemOnPress={() => this.listItemRemoveAllOnPress(arg.item)}
-			/>
-		)
-	}
+	renderListItem = (arg) => (
+		<ListItem
+			itemName={arg.item.name}
+			itemPrice={arg.item.price}
+			itemCount={this.state.itemsInCart.has(arg.item._id) ? this.state.itemsInCart.get(arg.item._id) : 0}
+			addItemOnPress={() => { this.listItemAddOneOnPress(arg.item) }}
+			removeItemOnPress={() => this.listItemRemoveOnPress(arg.item)}
+			removeAllItemOnPress={() => this.listItemRemoveAllOnPress(arg.item)}
+		/>
+	)
 
 	listItemRemoveAllOnPress = (item) => {
 		this.state.itemsInCart.delete(item._id)
@@ -76,11 +74,15 @@ export default class ItemList extends React.Component {
 	}
 
 	listItemRemoveOnPress = (item) => {
-		if (this.state.itemsInCart.has(item._id) && this.state.itemsInCart.get(item._id) >= 1) {
-			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id)-1)
-		} else {
-			this.state.itemsInCart.delete(item._id)
+		if (!this.state.itemsInCart.has(item._id)) {
+			return
 		}
+
+		if (this.state.itemsInCart.get(item._id) > 1) {
+			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id) - 1)
+		}
+		
+		this.state.itemsInCart.delete(item._id)
 
 		this.setState(this.state)
 	}
@@ -89,7 +91,7 @@ export default class ItemList extends React.Component {
 		if (!this.state.itemsInCart.has(item._id)) {
 			this.state.itemsInCart.set(item._id, 1)
 		} else {
-			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id)+1)
+			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id) + 1)
 		}
 
 		this.setState(this.state)
@@ -104,7 +106,7 @@ export default class ItemList extends React.Component {
 	previewOnPress = () => {
 		let orderData = this.state.listData
 			.filter(item => this.state.itemsInCart.has(item._id))
-			.map(item => ({data: item, count: this.state.itemsInCart.get(item._id)}))
+			.map(item => ({ data: item, count: this.state.itemsInCart.get(item._id) }))
 
 		Actions.PreviewOrder({
 			orderData: orderData,
@@ -137,8 +139,8 @@ export default class ItemList extends React.Component {
 				{selectedItemCount > 0 ?
 					<BottomHoverButton>
 						<TouchableOpacity onPress={this.previewOnPress}>
-							<Text style={{textAlign: "center"}}>{selectedItemCount} Items in Cart</Text>
-							<Text style={{textAlign: "center"}}>View Order Detail</Text>
+							<Text style={{ textAlign: "center" }}>{selectedItemCount} Items in Cart</Text>
+							<Text style={{ textAlign: "center" }}>View Order Detail</Text>
 						</TouchableOpacity>
 					</BottomHoverButton>
 					:
@@ -152,30 +154,28 @@ export default class ItemList extends React.Component {
 class ListItem extends React.Component {
 	render() {
 		return (
-			<TouchableOpacity onPress={this.props.addItemOnPress}>
-				<View style={this.props.itemCount > 0 ? Styles.listItemContainerHL : Styles.listItemContainer}>
-					<View style={listItemStyles.mainContainer}>
-						<View style={listItemStyles.placeHolderImage}><Text style={{ textAlign: "center", padding: 12 }}>Placeholder Image</Text></View>
-						<View style={listItemStyles.subContainer}>
-							<Text>{this.props.itemName}</Text>
-							<Text>${this.props.itemPrice}</Text>
-							<View style={listItemStyles.addRemoveContainer}>
-								<View style={{ flexDirection: "row", marginRight: 6 }}>
-									<RemoveItemButon onPress={this.props.removeItemOnPress} />
-								</View>
+			<View style={this.props.itemCount > 0 ? Styles.listItemContainerHL : Styles.listItemContainer}>
+				<View style={listItemStyles.mainContainer}>
+					<View style={listItemStyles.placeHolderImage}><Text style={{ textAlign: "center", padding: 12 }}>Placeholder Image</Text></View>
+					<View style={listItemStyles.subContainer}>
+						<Text>{this.props.itemName}</Text>
+						<Text>${this.props.itemPrice}</Text>
+						<View style={listItemStyles.addRemoveContainer}>
+							<View style={{ flexDirection: "row", marginRight: 6 }}>
+								<RemoveItemButon onPress={this.props.removeItemOnPress} />
+							</View>
 
-								<View style={{ flexDirection: "row", justifyContent: "center", marginHorizontal: 12 }}>
-									<Text style={{ textAlign: "center", fontSize: 18 }}>{this.props.itemCount}</Text>
-								</View>
+							<View style={{ flexDirection: "row", justifyContent: "center", marginHorizontal: 12 }}>
+								<Text style={{ textAlign: "center", fontSize: 18 }}>{this.props.itemCount}</Text>
+							</View>
 
-								<View style={{ flexDirection: "row", marginLeft: 6 }}>
-									<AddItemButton onPress={this.props.addItemOnPress} />
-								</View>
+							<View style={{ flexDirection: "row", marginLeft: 6 }}>
+								<AddItemButton onPress={this.props.addItemOnPress} />
 							</View>
 						</View>
 					</View>
 				</View>
-			</TouchableOpacity>
+			</View>
 		)
 	}
 }

@@ -21,6 +21,16 @@ export default class Login extends React.Component {
     passwordOnChange = (str) => this.setState({password: str})
 
     loginOnPress = async () => {
+        if (this.state.username.length === 0) {
+            Alert.alert("Input Error", "Username cannot be empty")
+            return
+        }
+
+        if (this.state.password.length === 0) {
+            Alert.alert("Input Error", "Password cannot be empty")
+            return
+        }
+
         const res = await UserLogin(this.state.username, this.state.password)
 
         if (res === null) {
@@ -31,7 +41,7 @@ export default class Login extends React.Component {
 
         if (res.error !== null && (res.userid === null || res.userid.length === 0)) {
             // username password mimatch
-            Alert.alert("Input Error", "Username Password Mismatch")
+            Alert.alert("Input Error", "Username password mismatch")
             return
         }
 

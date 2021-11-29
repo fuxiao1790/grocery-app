@@ -20,6 +20,16 @@ export default class register extends React.Component {
     passwordOnChange = (str) => this.setState({ password: str })
 
     registerOnPress = async () => {
+        if (this.state.username.length === 0) {
+            Alert.alert("Input Error", "Username cannot be empty")
+            return
+        }
+
+        if (this.state.password.length === 0) {
+            Alert.alert("Input Error", "Password cannot be empty")
+            return
+        }
+
         const registerRes = await UserRegister(this.state.username, this.state.password)
         
         if (registerRes === null) {
@@ -28,10 +38,11 @@ export default class register extends React.Component {
         }
 
         if (registerRes.error != null) {
-            Alert.alert("Register Error", "Username Already In Use")
+            Alert.alert("Register Error", "Username already in use")
             return
         }
-
+        
+        // auto login after user registers
         const loginRes = await UserLogin(this.state.username, this.state.password)
         if (loginRes != null && loginRes.userid != null && loginRes.userid.length > 0) {
             if (this.props.onRegister instanceof Function) {

@@ -24,6 +24,8 @@ export default class MainPage extends React.Component {
 
     storeListOnPress = () => Actions.StoreList({userData: { userID: this.state.userID }})
 
+    orderListOnPress = () => Actions.OrderList({ userData: { userID: this.state.userID } })       
+
     render() {
         return (
             <View style={Styles.backgroundColor}>
@@ -48,7 +50,7 @@ export default class MainPage extends React.Component {
                         />
                         <CustomButton
                             text={"Order History"}
-                            onPress={Actions.OrderList}
+                            onPress={this.orderListOnPress}
                         />
                     </>
                 }

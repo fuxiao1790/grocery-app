@@ -20,12 +20,13 @@ export default class CustomButton extends React.Component {
 const styles = StyleSheet.create({
 
     container: {
-        marginHorizontal: 24,
         marginTop: 96,
     },
 
     button: {
         backgroundColor: Colors.COLOR_PALLET_4,
+        marginBottom: 12,
+        marginHorizontal: 24,
         paddingVertical: 12,
         paddingHorizontal: 32,
         borderRadius: 45,
