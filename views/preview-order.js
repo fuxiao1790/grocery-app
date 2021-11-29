@@ -22,7 +22,7 @@ export default class PreviewOrder extends React.Component {
 		let newListData = this.state.listData.filter(i => i.data._id !== item.data._id)
 		this.setState({ listData: newListData })
 
-		this.props.listItemRemoveAllOnPress(item)
+		this.props.listItemRemoveAllOnPress(item.data)
 	}
 
 	listItemRemoveOnPress = (item) => {
@@ -36,7 +36,7 @@ export default class PreviewOrder extends React.Component {
 			this.setState(this.state)
 		}
 
-		this.props.listItemRemoveOnPress(item)
+		this.props.listItemRemoveOnPress(item.data)
 	}
 
 	listItemAddOneOnPress = (item) => {
@@ -44,7 +44,7 @@ export default class PreviewOrder extends React.Component {
 		res.count++
 		this.setState(this.state)
 
-		this.props.listItemAddOneOnPress(item)
+		this.props.listItemAddOneOnPress(item.data)
 	}
 
 	renderListItem = ({ item: item, index, seperators }) => (

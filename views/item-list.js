@@ -15,9 +15,10 @@ export default class ItemList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			listData: [], // {data: itemData{}, count: int}
+			listData: [],
 			loading: false,
 			endOfList: false,
+			itemsInCart: new Map(), // itemID => itemCount
 		}
 	}
 
@@ -44,7 +45,7 @@ export default class ItemList extends React.Component {
 			}
 
 			if (data.items != null) {
-				nextState["listData"] = this.state.listData.concat(data.items.map((val) => ({ data: val, count: 0 })))
+				nextState["listData"] = this.state.listData.concat(data.items)
 			}
 
 			if (data.items == null || data.items.length != count) {
@@ -58,9 +59,9 @@ export default class ItemList extends React.Component {
 	renderListItem = (arg) => {
 		return (
 			<ListItem
-				itemName={arg.item.data.name}
-				itemPrice={arg.item.data.price}
-				itemCount={arg.item.count}
+				itemName={arg.item.name}
+				itemPrice={arg.item.price}
+				itemCount={this.state.itemsInCart.has(arg.item._id) ? this.state.itemsInCart.get(arg.item._id) : 0}
 				addItemOnPress={() => { this.listItemAddOneOnPress(arg.item) }}
 				removeItemOnPress={() => this.listItemRemoveOnPress(arg.item)}
 				removeAllItemOnPress={() => this.listItemRemoveAllOnPress(arg.item)}
@@ -69,35 +70,42 @@ export default class ItemList extends React.Component {
 	}
 
 	listItemRemoveAllOnPress = (item) => {
-		let res = this.state.listData.find(i => i.data._id === item.data._id)
-		res.count = 0
+		this.state.itemsInCart.delete(item._id)
+
 		this.setState(this.state)
 	}
 
 	listItemRemoveOnPress = (item) => {
-		let res = this.state.listData.find(i => i.data._id === item.data._id)
-		if (res.count <= 0) {
-			return
+		if (this.state.itemsInCart.has(item._id) && this.state.itemsInCart.get(item._id) >= 1) {
+			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id)-1)
+		} else {
+			this.state.itemsInCart.delete(item._id)
 		}
-		res.count--
+
 		this.setState(this.state)
 	}
 
 	listItemAddOneOnPress = (item) => {
-		let res = this.state.listData.find(i => i.data._id === item.data._id)
-		res.count++
+		if (!this.state.itemsInCart.has(item._id)) {
+			this.state.itemsInCart.set(item._id, 1)
+		} else {
+			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id)+1)
+		}
+
 		this.setState(this.state)
 	}
 
 	calcSelectedItemCount = () => {
 		let total = 0
-		this.state.listData.forEach((el) => total += el.count)
+		this.state.itemsInCart.forEach((count) => total += count)
 		return total
 	}
 
 	previewOnPress = () => {
-		let orderData = []
-		this.state.listData.forEach((el) => el.count > 0 ? orderData.push(el) : null)
+		let orderData = this.state.listData
+			.filter(item => this.state.itemsInCart.has(item._id))
+			.map(item => ({data: item, count: this.state.itemsInCart.get(item._id)}))
+
 		Actions.PreviewOrder({
 			orderData: orderData,
 			storeData: this.props.storeData,
@@ -121,7 +129,7 @@ export default class ItemList extends React.Component {
 					ItemSeparatorComponent={RenderSeperator}
 					ListFooterComponent={RenderListFooter}
 					ListHeaderComponent={RenderSeperator}
-					keyExtractor={(item, index) => item.data._id}
+					keyExtractor={(item, index) => item._id}
 					onEndReached={() => { this.loadListData(this.state.listData.length, 5) }}
 					onEndReachedThreshold={0.5}
 				/>
