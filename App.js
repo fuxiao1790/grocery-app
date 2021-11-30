@@ -8,6 +8,7 @@ import MainPage from './views/main-page';
 import Login from './views/login';
 import Register from './views/register';
 import { Scene, Router, Stack } from 'react-native-router-flux';
+import OrderDetail from './views/order-detail';
 
 export default class App extends React.Component {
   render() {
@@ -22,6 +23,7 @@ export default class App extends React.Component {
           <Scene key="Checkout" component={Checkout} hideNavBar/>
           <Scene key="Login" component={Login} hideNavBar/>
           <Scene key="Register" component={Register} hideNavBar/>
+          <Scene key="OrderDetail" component={OrderDetail} hideNavBar/>
         </Stack>
       </Router>
     )
