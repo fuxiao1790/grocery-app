@@ -2,7 +2,6 @@ import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { Styles } from "../common/styles";
-import RoundedCornerButton from "../components/rounded-corner-button";
 import Header from "../components/header";
 import { Colors } from "../common/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";

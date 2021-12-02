@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, FlatList, StyleSheet } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
 import { Colors } from '../common/colors'
 import { Styles } from '../common/styles'

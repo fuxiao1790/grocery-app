@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemList from './views/item-list'
+import ItemList, { EditSearchQuery } from './views/item-list'
 import OrderList from './views/order-list'
 import PreviewOrder from './views/preview-order'
 import StoreList from './views/store-list'
@@ -24,6 +24,7 @@ export default class App extends React.Component {
           <Scene key="Login" component={Login} hideNavBar/>
           <Scene key="Register" component={Register} hideNavBar/>
           <Scene key="OrderDetail" component={OrderDetail} hideNavBar/>
+          <Scene key="EditSearchQuery" component={EditSearchQuery} hideNavBar/>
         </Stack>
       </Router>
     )

@@ -1,3 +1,4 @@
+import { parse } from "@babel/core"
 import { Platform } from "react-native"
 
 const BASE_URL_IOS_DEV = "https://localhost:443"
@@ -23,13 +24,22 @@ async function GetStoreList(skip, count) {
     return await helper(url, payload)
 }
 
-async function GetItemList(skip, count, storeID) {
+async function GetItemList(skip, count, storeID, searchName, priceMax, priceMin) {
     const url = urlHelper() + ITEM_LIST_ROUTE
 
     const payload = {
         method: "POST",
         headers: HEADERS,
-        body: JSON.stringify({ skip: skip, count: count, "store-id": storeID })
+        body: JSON.stringify({ 
+            "skip": skip,
+            "count": count,
+            "store-id": storeID,
+            "query": {
+                "name": searchName,
+                "price-min": priceMin === "" ? 0 : parseInt(priceMin, 10),
+                "price-max": priceMax === "" ? 0 : parseInt(priceMax, 10),
+            }
+        })
     }
 
     return await helper(url, payload)
@@ -97,13 +107,17 @@ async function SubmitOrder(userData, orderData, storeData, address) {
 
 async function helper(url, payload) {
     try {
+        if (__DEV__) {
+            console.log(payload)
+        }
+
         const res = await fetch(url, payload)
         const json = await res.json()
 
         if (__DEV__) {
             console.log(json)
         }
-    
+
         return json
     } catch(err) {
         console.log("error calling " + url + " | " + err)

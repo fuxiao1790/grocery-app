@@ -27,7 +27,17 @@ export default class Header extends React.Component {
                     </Text>
                 </View>
 
-                <View style={styles.dummyItemContainer} />
+                <View style={styles.searchButtonContainer}>
+                    {this.props.searchButton === true ?
+                        <TouchableOpacity onPress={this.props.searchButtonOnPress}>
+                            <Text style={styles.backButtonText}>
+                                Search
+                            </Text>
+                        </TouchableOpacity>
+                        :
+                        null
+                    }
+                </View>
             </SafeAreaView>
         )
     }
@@ -53,7 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.COLOR_PALLET_1
     },
 
-    dummyItemContainer: {
+    searchButtonContainer: {
         flex: 1,
         backgroundColor: Colors.COLOR_PALLET_1
     },
