@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, FlatList, StyleSheet } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Actions } from 'react-native-router-flux'
 import { GetItemList } from '../api/api'
 import { Colors } from '../common/colors'
@@ -11,19 +10,106 @@ import Header from '../components/header'
 import { RenderListFooter, RenderSeperator } from '../components/list-common-components'
 import RemoveItemButon from '../components/remove-item-button'
 
-export default class ItemList extends React.Component {
+export default class StoreItemList extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			cartData: new Map(), // itemID => { data: itemData, count: count }
+		}
+	}
+
+	calcSelectedItemCount = () => {
+		let total = 0
+		this.state.cartData.forEach((val) => total += val.count)
+		return total
+	}
+
+	onUpdateSelectedItems = (newData) => this.setState({cartData: newData})
+
+	listItemRemoveAllOnPress = (item) => {
+		this.state.cartData.delete(item._id)
+
+		this.setState(this.state)
+	}
+
+	listItemRemoveOnPress = (item) => {
+		if (!this.state.cartData.has(item._id)) {
+			return
+		}
+
+		if (this.state.cartData.get(item._id) > 1) {
+			this.state.cartData.set(item._id, {itemData: item, count: this.state.cartData.get(item._id).count - 1})
+		} else {
+			this.state.cartData.delete(item._id)
+		}
+
+		this.setState(this.state)
+	}
+
+	listItemAddOneOnPress = (item) => {
+		if (!this.state.cartData.has(item._id)) {
+			this.state.cartData.set(item._id, {itemData: item, count: 1})
+		} else {
+			this.state.cartData.set(item._id, {itemData: item, count: this.state.cartData.get(item._id).count + 1})
+		}
+
+		this.setState(this.state)
+	}
+
+	previewOnPress = () => {
+		let orderData = Array.from(this.state.cartData, ([data, count]) => ({data, count}))
+		console.log(orderData)
+
+		Actions.PreviewOrder({
+			orderData: orderData,
+			storeData: this.props.storeData,
+			userData: this.props.userData,
+			listItemAddOneOnPress: this.listItemAddOneOnPress,
+			listItemRemoveOnPress: this.listItemRemoveOnPress,
+			listItemRemoveAllOnPress: this.listItemRemoveAllOnPress,
+		})
+	}
+
+	render() {
+		let selectedItemCount = this.calcSelectedItemCount()
+		return (
+			<View style={{ flex: 1 }}>
+				<Header title={"Item List"} backOnPress={Actions.pop} />
+
+				<ItemList 
+					storeData={this.props.storeData}
+					userData={this.props.userData}
+					cartData={this.state.cartData}
+					listItemAddOneOnPress={this.listItemAddOneOnPress}
+					listItemRemoveOnPress={this.listItemRemoveOnPress}
+					removeAllItemOnPress={this.listItemRemoveAllOnPress}
+				/>
+
+				{selectedItemCount > 0 ?
+					<BottomHoverButton
+						onPress={this.previewOnPress}
+						text={"Preview Order"}
+					/>
+					:
+					null
+				}
+			</View>
+		)
+	}
+}
+
+class ItemList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			listData: [],
 			loading: false,
 			endOfList: false,
-			itemsInCart: new Map(), // itemID => itemCount
 		}
 	}
 
 	componentDidMount() {
-		this.loadListData(this.state.listData.length, 10)
+		this.loadListData(this.state.listData.length, 5) // always load default list data
 	}
 
 	loadListData = async (skip, count) => {
@@ -60,91 +146,26 @@ export default class ItemList extends React.Component {
 		<ListItem
 			itemName={arg.item.name}
 			itemPrice={arg.item.price}
-			itemCount={this.state.itemsInCart.has(arg.item._id) ? this.state.itemsInCart.get(arg.item._id) : 0}
-			addItemOnPress={() => { this.listItemAddOneOnPress(arg.item) }}
-			removeItemOnPress={() => this.listItemRemoveOnPress(arg.item)}
-			removeAllItemOnPress={() => this.listItemRemoveAllOnPress(arg.item)}
+			itemCount={this.props.cartData.has(arg.item._id) ? this.props.cartData.get(arg.item._id).count : 0}
+			addItemOnPress={() => { this.props.listItemAddOneOnPress(arg.item) }}
+			removeItemOnPress={() => this.props.listItemRemoveOnPress(arg.item)}
+			removeAllItemOnPress={() => this.props.listItemRemoveAllOnPress(arg.item)}
 		/>
 	)
-
-	listItemRemoveAllOnPress = (item) => {
-		this.state.itemsInCart.delete(item._id)
-
-		this.setState(this.state)
-	}
-
-	listItemRemoveOnPress = (item) => {
-		if (!this.state.itemsInCart.has(item._id)) {
-			return
-		}
-
-		if (this.state.itemsInCart.get(item._id) > 1) {
-			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id) - 1)
-		}
-		
-		this.state.itemsInCart.delete(item._id)
-
-		this.setState(this.state)
-	}
-
-	listItemAddOneOnPress = (item) => {
-		if (!this.state.itemsInCart.has(item._id)) {
-			this.state.itemsInCart.set(item._id, 1)
-		} else {
-			this.state.itemsInCart.set(item._id, this.state.itemsInCart.get(item._id) + 1)
-		}
-
-		this.setState(this.state)
-	}
-
-	calcSelectedItemCount = () => {
-		let total = 0
-		this.state.itemsInCart.forEach((count) => total += count)
-		return total
-	}
-
-	previewOnPress = () => {
-		let orderData = this.state.listData
-			.filter(item => this.state.itemsInCart.has(item._id))
-			.map(item => ({ data: item, count: this.state.itemsInCart.get(item._id) }))
-
-		Actions.PreviewOrder({
-			orderData: orderData,
-			storeData: this.props.storeData,
-			userData: this.props.userData,
-			listItemAddOneOnPress: this.listItemAddOneOnPress,
-			listItemRemoveOnPress: this.listItemRemoveOnPress,
-			listItemRemoveAllOnPress: this.listItemRemoveAllOnPress,
-		})
-	}
-
+	
 	render() {
-		let selectedItemCount = this.calcSelectedItemCount()
 		return (
-			<View style={{ flex: 1 }}>
-				<Header title={"Item List"} backOnPress={Actions.pop} />
-
-				<FlatList
-					style={Styles.list}
-					renderItem={this.renderListItem}
-					data={this.state.listData}
-					ItemSeparatorComponent={RenderSeperator}
-					ListFooterComponent={RenderListFooter}
-					ListHeaderComponent={RenderSeperator}
-					keyExtractor={(item, index) => item._id}
-					onEndReached={() => { this.loadListData(this.state.listData.length, 5) }}
-					onEndReachedThreshold={0.5}
-				/>
-
-				{selectedItemCount > 0 ?
-					<BottomHoverButton
-						onPress={this.previewOnPress}
-						text={"Preview Order"}
-					/>
-					:
-					null
-				}
-			</View>
+			<FlatList
+				style={Styles.list}
+				renderItem={this.renderListItem}
+				data={this.state.listData}
+				ItemSeparatorComponent={RenderSeperator}
+				ListFooterComponent={RenderListFooter}
+				ListHeaderComponent={RenderSeperator}
+				keyExtractor={(item, index) => item._id}
+				onEndReached={() => { this.loadListData(this.state.listData.length, 5) }}
+				onEndReachedThreshold={0.5}
+			/>
 		)
 	}
 }
