@@ -6,7 +6,7 @@ import { GetStoreList } from '../api/api'
 import { Colors } from '../common/colors'
 import { Styles } from '../common/styles'
 import Header from '../components/header'
-import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
+import { RenderListFooter, RenderSeperator } from '../components/list-common-components'
 
 export default class StoreList extends React.Component {
 	constructor(props) {

@@ -1,41 +1,57 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../common/colors";
+import { Styles } from "../common/styles";
 
 export default class BottomHoverButton extends React.Component {
     render() {
         return (
-            <View style={{ position: "absolute", bottom: 0, right: 0 }}>
-                <SafeAreaView>
+            <SafeAreaView style={styles.mainContainer}>
+                <TouchableOpacity onPress={this.props.onPress}>
                     <View style={styles.buttonContainer}>
-                        {this.props.children}
+                        <Text style={styles.buttonText}>{this.props.text}</Text>
                     </View>
-                </SafeAreaView>
-            </View>
+                </TouchableOpacity>
+            </SafeAreaView>
         )
     }
 }
 
+class BottomHoverContainer extends React.Component {
+    render() {
+        return (
+            <SafeAreaView style={styles.mainContainer}>
+                {this.props.children}
+            </SafeAreaView>
+        )
+    }
+}
+
+export { BottomHoverContainer }
+
 const styles = StyleSheet.create({
+    mainContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+    },
+
     buttonContainer: {
         paddingVertical: 12,
         paddingHorizontal: 16,
-        marginRight: 24,
-        marginBottom: 12,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Colors.COLOR_PALLET_2,
+        backgroundColor: Colors.COLOR_PALLET_1,
         borderRadius: 45,
+        flex: 1,
+        marginHorizontal: 36,
+        marginBottom: 12,
 
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.55,
-        shadowRadius: 2.22,
+        ...Styles.shadow,
+    },
 
-        elevation: 3,
+    buttonText: {
+        fontSize: 16,
     }
 })

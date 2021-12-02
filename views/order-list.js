@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import { GetOrderList } from '../api/api'
 import { Styles } from '../common/styles'
 import Header from '../components/header'
-import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
+import { RenderListFooter, RenderSeperator } from '../components/list-common-components'
 
 export default class OrderList extends React.Component {
 	constructor(props) {

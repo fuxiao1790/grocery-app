@@ -7,7 +7,7 @@ import { Styles } from '../common/styles'
 import AddItemButton from '../components/add-item-button'
 import BottomHoverButton from '../components/bottom-hover-button'
 import Header from '../components/header'
-import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
+import { RenderListFooter, RenderSeperator } from '../components/list-common-components'
 import RemoveItemButon from '../components/remove-item-button'
 
 export default class PreviewOrder extends React.Component {
@@ -103,12 +103,10 @@ export default class PreviewOrder extends React.Component {
 					ListHeaderComponent={RenderSeperator}
 				/>
 
-				<BottomHoverButton>
-					<TouchableOpacity onPress={this.checkoutOnPress}>
-						<Text style={{ textAlign: "center" }}>Subtotal: ${this.calcSubTotal()}</Text>
-						<Text style={{ textAlign: "center", fontSize: 16 }}>Checkout</Text>
-					</TouchableOpacity>
-				</BottomHoverButton>
+				<BottomHoverButton
+					onPress={this.checkoutOnPress}
+					text={"Checkout"}
+				/>
 			</View>
 		)
 	}

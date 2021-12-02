@@ -8,7 +8,7 @@ import { Styles } from '../common/styles'
 import AddItemButton from '../components/add-item-button'
 import BottomHoverButton from '../components/bottom-hover-button'
 import Header from '../components/header'
-import { RenderListFooter, RenderSeperator } from '../components/list-item-seperator'
+import { RenderListFooter, RenderSeperator } from '../components/list-common-components'
 import RemoveItemButon from '../components/remove-item-button'
 
 export default class ItemList extends React.Component {
@@ -137,12 +137,10 @@ export default class ItemList extends React.Component {
 				/>
 
 				{selectedItemCount > 0 ?
-					<BottomHoverButton>
-						<TouchableOpacity onPress={this.previewOnPress}>
-							<Text style={{ textAlign: "center" }}>{selectedItemCount} Items in Cart</Text>
-							<Text style={{ textAlign: "center" }}>View Order Detail</Text>
-						</TouchableOpacity>
-					</BottomHoverButton>
+					<BottomHoverButton
+						onPress={this.previewOnPress}
+						text={"Preview Order"}
+					/>
 					:
 					null
 				}

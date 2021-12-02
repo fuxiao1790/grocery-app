@@ -26,6 +26,18 @@ const Styles = StyleSheet.create({
     backgroundColor: {
         backgroundColor: Colors.COLOR_PALLET_3,
         flex: 1
+    },
+
+    shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.33,
+        shadowRadius: 2.22,
+
+        elevation: 3,
     }
 })
 

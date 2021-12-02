@@ -2,8 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../common/colors";
+import { Styles } from "../common/styles";
 
-export default class CustomButton extends React.Component {
+export default class RoundedCornerButton extends React.Component {
     render() {
         return (
             <View style={styles.container}>
@@ -24,26 +25,18 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: Colors.COLOR_PALLET_4,
+        backgroundColor: Colors.COLOR_PALLET_1,
         marginBottom: 12,
         marginHorizontal: 24,
         paddingVertical: 12,
         paddingHorizontal: 32,
         borderRadius: 45,
 
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-
-        elevation: 3,
+        ...Styles.shadow,
     },
 
     text: {
         textAlign: 'center',
-        fontSize: 18
+        fontSize: 18,
     }
 })

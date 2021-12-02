@@ -4,8 +4,9 @@ import { Actions } from 'react-native-router-flux'
 import { Colors } from '../common/colors'
 import Header from '../components/header'
 import CustomTextInput from '../components/custom-text-input'
-import CustomButton from '../components/custom-button'
+import RoundedCornerButton from '../components/rounded-corner-button'
 import { SubmitOrder } from '../api/api'
+import { Mutex } from 'async-mutex'
 
 export default class Checkout extends React.Component {
     constructor(props) {
@@ -13,11 +14,22 @@ export default class Checkout extends React.Component {
         this.state = {
             address: ""
         }
+
+        this.checkoutButtonMutex = new Mutex()
+        this.didCheckout = false
     }
 
     checkoutOnPress = async () => {
+        const unlock = await this.checkoutButtonMutex.acquire()
+
+        if (this.didCheckout) {
+            unlock()
+            return
+        }
+
         if (this.state.address.length === 0) {
             Alert.alert("Input Error", "Address cannot be empty")
+            unlock()
             return
         }
 
@@ -30,16 +42,21 @@ export default class Checkout extends React.Component {
         if (res === null) {
             // network error nothing was returned from server
             Alert.alert("Network Error", "Is the server running?")
+            unlock()
             return
         }
 
         if (res.error !== null) {
             // internal server errors, eg db failing.
             Alert.alert("Server Error", "Server Could not handle the request at the momemnt?")
+            unlock()
             return
         }
 
+        Alert.alert("Success", "Order sumitted")
         Actions.popTo("MainPage")
+        this.didCheckout = true
+        unlock()
     }
 
     onChangeText = (str) => this.setState({ address: str })
@@ -54,7 +71,7 @@ export default class Checkout extends React.Component {
                     placeholder={"Enter Address"}
                 />
 
-                <CustomButton
+                <RoundedCornerButton
                     text={"Done"}
                     onPress={this.checkoutOnPress}
                 />

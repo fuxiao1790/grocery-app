@@ -1,12 +1,14 @@
 import React from "react";
-import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, StatusBar, SafeAreaView, Platform } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from '../common/colors'
+import { Styles } from "../common/styles";
 
 export default class Header extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.mainContainer}>
+                <StatusBar backgroundColor={Colors.COLOR_PALLET_1}/>
                 <View style={styles.backButtonContainer}>
                     {!this.props.root ?
                         <TouchableOpacity onPress={this.props.backOnPress}>
@@ -37,15 +39,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: Colors.COLOR_PALLET_1,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-
-        elevation: 3,
+        
+        ...Styles.shadow
     },
 
     backButtonContainer: {

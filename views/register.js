@@ -3,9 +3,10 @@ import { Alert, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Header from "../components/header";
 import CustomTextInput from "../components/custom-text-input";
-import CustomButton from "../components/custom-button";
+import CustomButton from "../components/rounded-corner-button";
 import { UserLogin, UserRegister } from "../api/api"
 import { Styles } from "../common/styles";
+import RoundedCornerButton from "../components/rounded-corner-button";
 
 export default class register extends React.Component {
     constructor(props) {
@@ -68,7 +69,7 @@ export default class register extends React.Component {
                     secureTextEntry
                 />
 
-                <CustomButton
+                <RoundedCornerButton
                     text={"Register"}
                     onPress={this.registerOnPress}
                 />

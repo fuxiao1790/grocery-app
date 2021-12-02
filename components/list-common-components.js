@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../common/colors";
 
 function RenderSeperator() {
@@ -7,7 +8,7 @@ function RenderSeperator() {
 }
 
 function RenderListFooter() {
-    return <View style={styles.footer}/>
+    return <SafeAreaView style={styles.footer}/>
 }
 
 const styles = StyleSheet.create({
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-        height: 120
+        padding: 36
     }
 })
 

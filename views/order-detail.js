@@ -4,7 +4,7 @@ import { Actions } from "react-native-router-flux";
 import { Colors } from "../common/colors";
 import { Styles } from "../common/styles";
 import Header from "../components/header";
-import { RenderSeperator, RenderListFooter } from "../components/list-item-seperator";
+import { RenderSeperator, RenderListFooter } from "../components/list-common-components";
 
 export default class OrderDetail extends React.Component {
     renderHeader = () => {
