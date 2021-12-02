@@ -57,7 +57,7 @@ export default class StoreItemList extends React.Component {
 	}
 
 	previewOnPress = () => {
-		let orderData = Array.from(this.state.cartData, ([data, count]) => ({data, count}))
+		let orderData = Array.from(this.state.cartData, ([key, value]) => ({data: value.itemData, count: value.count}))
 		console.log(orderData)
 
 		Actions.PreviewOrder({
